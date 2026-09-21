@@ -1,7 +1,5 @@
 <p align="center">
-  <a href="https://typesafe.ai/">
-    <img src="assets/typesafe-logo.png" width="96" alt="TypeSafe AI logo">
-  </a>
+  <img src="assets/jev-router-logo.png" width="112" alt="Jev Router logo">
 </p>
 
 <h1 align="center">Jev Router</h1>
@@ -92,4 +90,4 @@ Validate the plugin structure with Codex's `plugin-creator` validator before pub
 
 The plugin code is available under the [MIT License](LICENSE).
 
-The TypeSafe AI mark in `assets/typesafe-logo.png` was downloaded unchanged from the [official TypeSafe AI website](https://typesafe.ai/) and is excluded from the MIT License. TypeSafe, Jev, their names, and their brand assets belong to their respective owner. The generated routing illustration is original project artwork.
+The Jev Router logo and routing illustration are original project artwork. TypeSafe, Jev, their names, and their brand assets belong to their respective owner; references here identify the compatible service and do not imply endorsement.
