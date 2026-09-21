@@ -10,7 +10,8 @@ const {
   containsSensitiveValue,
   readApiKey,
   routePrompt,
-  timeoutFromEnv
+  timeoutFromEnv,
+  userAgentFromArgs
 } = require('./jev-router.cjs');
 
 const validResponse = {
@@ -100,4 +101,30 @@ test('reads a key from env or a private file only', () => {
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('labels the client in the user agent', async () => {
+  assert.equal(userAgentFromArgs([]), 'agentkit-jev-router/0.1.0');
+  assert.equal(userAgentFromArgs(['--client', 'unknown']), 'agentkit-jev-router/0.1.0');
+  const userAgent = userAgentFromArgs(['--client', 'claude-code']);
+  assert.equal(userAgent, 'agentkit-jev-router/0.1.0 (claude-code)');
+
+  let sent;
+  await routePrompt('task', {
+    apiKey: 'test',
+    userAgent,
+    fetchImpl: async (_url, init) => {
+      sent = init.headers['User-Agent'];
+      return new Response('{}', { status: 200 });
+    }
+  });
+  assert.equal(sent, userAgent);
+});
+
+test('fails open on network errors', async () => {
+  const result = await routePrompt('task', {
+    apiKey: 'test',
+    fetchImpl: async () => { throw new TypeError('fetch failed'); }
+  });
+  assert.deepEqual(result, { status: 'fallback', reason: 'network-error' });
 });

@@ -9,6 +9,7 @@ const API_URL = 'https://api.typesafe.ai/v1/systemone';
 const DEFAULT_TIMEOUT_MS = 1200;
 const MAX_PROMPT_CHARS = 12000;
 const CONFIDENCE_FLOOR = 0.65;
+const USER_AGENT = 'agentkit-jev-router/0.1.0';
 
 const choices = {
   workflow: ['direct', 'investigate', 'implement', 'plan', 'review'],
@@ -142,7 +143,7 @@ async function routePrompt(prompt, options = {}) {
         Authorization: `Bearer ${apiKey}`,
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'User-Agent': 'agentkit-jev-router/0.1.0'
+        'User-Agent': options.userAgent ?? USER_AGENT
       },
       body: JSON.stringify(buildRequest(prompt, options.model)),
       signal: controller.signal
@@ -167,6 +168,13 @@ function timeoutFromEnv(value) {
   return Number.isFinite(parsed) && parsed >= 250 && parsed <= 5000
     ? parsed
     : DEFAULT_TIMEOUT_MS;
+}
+
+function userAgentFromArgs(argv) {
+  const index = argv.indexOf('--client');
+  return index !== -1 && argv[index + 1] === 'claude-code'
+    ? `${USER_AGENT} (claude-code)`
+    : USER_AGENT;
 }
 
 function readApiKey(env = process.env, keyPath = path.join(os.homedir(), '.config/typesafe/api-key')) {
@@ -198,7 +206,8 @@ async function main() {
   const result = await routePrompt(String(payload.prompt || payload.user_prompt || '').trim(), {
     apiKey: readApiKey(),
     model: process.env.TYPESAFE_DEFAULT_MODEL || 'jev-latest',
-    timeoutMs: timeoutFromEnv(process.env.JEV_ROUTER_TIMEOUT_MS)
+    timeoutMs: timeoutFromEnv(process.env.JEV_ROUTER_TIMEOUT_MS),
+    userAgent: userAgentFromArgs(process.argv.slice(2))
   });
 
   if (result.status === 'ok') {
@@ -224,5 +233,6 @@ module.exports = {
   parseAnswer,
   readApiKey,
   routePrompt,
-  timeoutFromEnv
+  timeoutFromEnv,
+  userAgentFromArgs
 };

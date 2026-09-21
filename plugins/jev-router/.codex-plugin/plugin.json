@@ -1,6 +1,6 @@
 {
   "name": "jev-router",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Adds fail-open Jev workflow routing to Codex prompts.",
   "author": {
     "name": "Son"
