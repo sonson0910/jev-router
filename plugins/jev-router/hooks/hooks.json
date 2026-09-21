@@ -1,0 +1,17 @@
+{
+  "description": "Optional Jev routing hint with fail-open fallback.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$PLUGIN_ROOT/hooks/jev-router.cjs\"",
+            "timeout": 3,
+            "statusMessage": "Asking Jev for a routing hint"
+          }
+        ]
+      }
+    ]
+  }
+}

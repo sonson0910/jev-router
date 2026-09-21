@@ -1,0 +1,21 @@
+{
+  "name": "jev-router",
+  "version": "0.1.0",
+  "description": "Adds fail-open Jev workflow routing to Codex prompts.",
+  "author": {
+    "name": "Son"
+  },
+  "interface": {
+    "displayName": "Jev Router",
+    "shortDescription": "Advisory workflow routing with safe fallback.",
+    "longDescription": "Uses TypeSafe AI's Jev model to add a typed workflow, domain, risk, and execution hint before each Codex turn. Existing AgentKit rules remain authoritative, and failures silently fall back to normal routing.",
+    "developerName": "Son",
+    "category": "Productivity",
+    "capabilities": [
+      "Routing"
+    ],
+    "defaultPrompt": [
+      "Show the Jev routing hint for this task."
+    ]
+  }
+}
