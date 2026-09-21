@@ -1,0 +1,18 @@
+{
+  "name": "jev-router",
+  "owner": {
+    "name": "Son"
+  },
+  "metadata": {
+    "description": "Fail-open Jev workflow routing for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "jev-router",
+      "source": "./plugins/jev-router",
+      "description": "Adds a fail-open, advisory Jev workflow routing hint before each Claude Code prompt.",
+      "version": "0.2.0",
+      "category": "productivity"
+    }
+  ]
+}

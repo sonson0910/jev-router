@@ -106,6 +106,8 @@ test('reads a key from env or a private file only', () => {
 test('labels the client in the user agent', async () => {
   assert.equal(userAgentFromArgs([]), 'agentkit-jev-router/0.1.0');
   assert.equal(userAgentFromArgs(['--client', 'unknown']), 'agentkit-jev-router/0.1.0');
+  assert.equal(userAgentFromArgs([], { CLAUDECODE: '1' }), 'agentkit-jev-router/0.1.0 (claude-code)');
+  assert.equal(userAgentFromArgs(['--client', 'codex'], { CLAUDECODE: '1' }), 'agentkit-jev-router/0.1.0');
   const userAgent = userAgentFromArgs(['--client', 'claude-code']);
   assert.equal(userAgent, 'agentkit-jev-router/0.1.0 (claude-code)');
 

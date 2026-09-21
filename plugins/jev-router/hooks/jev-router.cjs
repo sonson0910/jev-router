@@ -170,11 +170,10 @@ function timeoutFromEnv(value) {
     : DEFAULT_TIMEOUT_MS;
 }
 
-function userAgentFromArgs(argv) {
+function userAgentFromArgs(argv, env = {}) {
   const index = argv.indexOf('--client');
-  return index !== -1 && argv[index + 1] === 'claude-code'
-    ? `${USER_AGENT} (claude-code)`
-    : USER_AGENT;
+  const claudeCode = index === -1 ? env.CLAUDECODE === '1' : argv[index + 1] === 'claude-code';
+  return claudeCode ? `${USER_AGENT} (claude-code)` : USER_AGENT;
 }
 
 function readApiKey(env = process.env, keyPath = path.join(os.homedir(), '.config/typesafe/api-key')) {
@@ -207,7 +206,7 @@ async function main() {
     apiKey: readApiKey(),
     model: process.env.TYPESAFE_DEFAULT_MODEL || 'jev-latest',
     timeoutMs: timeoutFromEnv(process.env.JEV_ROUTER_TIMEOUT_MS),
-    userAgent: userAgentFromArgs(process.argv.slice(2))
+    userAgent: userAgentFromArgs(process.argv.slice(2), process.env)
   });
 
   if (result.status === 'ok') {

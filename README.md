@@ -5,15 +5,15 @@
 <h1 align="center">Jev Router</h1>
 
 <p align="center">
-  A fail-open, advisory <a href="https://typesafe.ai/">Jev</a> workflow router for Codex.
+  A fail-open, advisory <a href="https://typesafe.ai/">Jev</a> workflow router for Codex and Claude Code.
 </p>
 
 ![Abstract diagram showing typed decision routes and an always-open fallback lane](assets/jev-router-hero.png)
 
 > [!IMPORTANT]
-> This is an independent community plugin. It is not an official TypeSafe AI or OpenAI project.
+> This is an independent community plugin. It is not an official TypeSafe AI, OpenAI, or Anthropic project.
 
-Jev Router asks TypeSafe AI's Jev model for a small typed routing hint before each prompt. The hint helps Codex select a workflow and capability while leaving AgentKit rules, user authorization, permissions, deterministic checks, and review gates in control.
+Jev Router asks TypeSafe AI's Jev model for a small typed routing hint before each prompt. The hint helps Codex or Claude Code select a workflow and capability while leaving AgentKit rules, user authorization, permissions, deterministic checks, and review gates in control.
 
 ## What it returns
 
@@ -30,7 +30,7 @@ Every field includes Jev's confidence. Low-confidence fields are marked uncertai
 
 ## Fail-open behavior
 
-Normal Codex routing continues without Jev context when:
+Normal Codex or Claude Code routing continues without Jev context when:
 
 - the API key is missing;
 - the prompt looks credential-sensitive;
@@ -42,6 +42,10 @@ The router makes one request, retries zero times, and never uses Jev to lower ri
 
 ## Install
 
+This repository is both a Codex marketplace and a Claude Code marketplace. Both hosts install the same plugin directory and run the same hook script.
+
+### Codex
+
 Add this repository as a Codex marketplace, then install the plugin:
 
 ```bash
@@ -50,6 +54,19 @@ codex plugin add jev-router@jev-router
 ```
 
 Start a new Codex thread and review the hook in `/hooks` before trusting it.
+
+### Claude Code
+
+Add this repository as a Claude Code marketplace, then install the plugin:
+
+```bash
+claude plugin marketplace add sonson0910/jev-router
+claude plugin install jev-router@jev-router
+```
+
+Start a new Claude Code session so the `UserPromptSubmit` hook loads. Run `/hooks` to inspect it. The plugin adds its own hook group and leaves existing hooks in `settings.json` unchanged.
+
+Requests sent from Claude Code are labeled `agentkit-jev-router/0.1.0 (claude-code)` in the `User-Agent` header. The label is detected from the `CLAUDECODE=1` environment variable that Claude Code sets, or it can be forced with `--client claude-code` when the script is registered manually.
 
 ## Configure the API key
 
@@ -84,7 +101,14 @@ Run the focused test suite:
 node --test plugins/jev-router/hooks/jev-router.test.cjs
 ```
 
-Validate the plugin structure with Codex's `plugin-creator` validator before publishing changes.
+Validate the plugin structure before publishing changes. For Codex, use the `plugin-creator` validator. For Claude Code, run:
+
+```bash
+claude plugin validate .
+claude plugin validate plugins/jev-router
+```
+
+The shared hook command resolves the plugin root through `${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}`, so one `hooks/hooks.json` works in both hosts.
 
 ## License and attribution
 

@@ -1,0 +1,12 @@
+{
+  "name": "jev-router",
+  "version": "0.2.0",
+  "description": "Adds a fail-open, advisory Jev workflow routing hint before each Claude Code prompt.",
+  "author": {
+    "name": "Son"
+  },
+  "homepage": "https://github.com/sonson0910/jev-router",
+  "repository": "https://github.com/sonson0910/jev-router",
+  "license": "MIT",
+  "keywords": ["routing", "hooks", "typesafe", "jev"]
+}
